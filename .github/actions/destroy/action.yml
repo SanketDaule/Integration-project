@@ -1,0 +1,52 @@
+name: "Destroy"
+description: "destroys the infra within a specified environment"
+
+inputs:
+  environment: 
+    description: "the environment to deploy(eg dev prd)"
+    required: false
+    
+runs:
+  using: composite
+  steps:
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_ACCESS_SECRET_KEY_ID }}
+        aws-region: ap-south-1
+
+    - name: Setup python environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.11
+
+    - name: Setup Terraform
+      uses: actions/setup-terraform@v1
+      with:
+        terraform_version: 1.8.4
+
+    - name: Install backend dep
+      run: yarn --dev
+      working-directory: backend
+      shell: bash
+
+    - name: Build Lambda Layer
+      run: make build-lambda-layer
+      shell: bash
+
+    - name: Initialize Terraform
+      run:  make terraform-init
+      shell: bash
+
+    - name: Run Terraform plan
+      run: unbuffer make terraform-plan
+      shell: bash
+
+    - name: run Terraform Apply
+      run: make terraform-apply
+      shell: bash
+      
