@@ -1,0 +1,19 @@
+name: CD to detroy resources
+
+on:
+  workflow_dispatch:
+
+
+jobs: 
+  destroy: 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: destroy infra
+        uses: ./.github/action/destroy
+
+
+       

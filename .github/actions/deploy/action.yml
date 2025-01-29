@@ -6,6 +6,10 @@ inputs:
     description: "the environment to deploy(eg dev prd)"
     required: false
 
+  aws_account_id:
+    description: AWS Account ID
+    required: true
+
 runs:
   using: composite
   steps:

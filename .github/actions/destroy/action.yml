@@ -5,6 +5,10 @@ inputs:
   environment: 
     description: "the environment to destroy(eg dev prd)"
     required: false
+
+  aws_account_id:
+    description: AWS Account ID
+    required: true
     
 runs:
   using: composite
